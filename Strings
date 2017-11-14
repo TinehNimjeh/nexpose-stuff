@@ -1,0 +1,23 @@
+WITH 
+   target_vulnerabilities AS ( 
+      SELECT DISTINCT vulnerability_id 
+      FROM dim_vulnerability_reference 
+   ), 
+   scans_in_target_month AS ( 
+      SELECT * 
+      FROM dim_scan
+   ), 
+   asset_vulnerabilities_in_month AS ( 
+      SELECT DISTINCT asset_id, vulnerability_id 
+      FROM fact_asset_scan_vulnerability_finding 
+         JOIN scans_in_target_month USING (scan_id) 
+         JOIN target_vulnerabilities USING (vulnerability_id) 
+   ) 
+SELECT DISTINCT ip_address AS IP, host_name AS "Host Name", title AS Vulnerability, summary AS Solution, htmlToText(fix) AS "Solution Steps" 
+FROM asset_vulnerabilities_in_month 
+   JOIN dim_vulnerability USING (vulnerability_id) 
+   JOIN dim_asset USING (asset_id) 
+   LEFT OUTER JOIN dim_asset_vulnerability_solution USING (asset_id, vulnerability_id) 
+   LEFT OUTER JOIN dim_solution USING (solution_id) 
+where title like '%Acrobat%'                                    /* replace the value between the % to search the string */
+ORDER BY ip_address, host_name, title
