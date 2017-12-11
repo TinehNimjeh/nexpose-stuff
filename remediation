@@ -4,12 +4,13 @@ from dim_asset_vulnerability_solution avs
 JOIN dim_solution_highest_supercedence dshs USING (solution_id)
 JOIN dim_solution USING (solution_id)
 ),
+
 vul_skill AS (
 SELECT dve.vulnerability_id, string_agg(skill_level, ',' order by skill_level) as skill_level
 FROM dim_vulnerability_exploit as dve
 group by dve.vulnerability_id
 )
-SELECT da.host_name,da.ip_address,da.mac_address,dv.vulnerability_id,dv.title,dv.severity, round(dv.riskscore) as riskscore,dv.exploits,dv.malware_kits,favf.vulnerability_instances,
+SELECT da.host_name,da.ip_address,da.mac_address,dv.vulnerability_id,dv.title,dv.severity, round(dv.riskscore) as riskscore,dv.exploits,dv.malware_kits,dv.cvss_score, favf.vulnerability_instances,
           CASE 
                WHEN dv.cvss_access_vector_id = 'L' then 'Local'
                WHEN dv.cvss_access_vector_id = 'A' then 'Adjacent Network'
