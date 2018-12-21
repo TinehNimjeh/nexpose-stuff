@@ -3,18 +3,19 @@ WITH
       SELECT DISTINCT vulnerability_id  
       FROM dim_vulnerability_reference  
       WHERE reference IN (
-'3191492',
-'3188744',
-'3188743',
-'3181988',
-'3890830'
+'4483187',
+'4483228',
+'4483229',
+'4483232',
+'4483235',
+'4483234'
 )
 	      /* This is where you would edit the 'kb or ms' number. Make sure to only include the number for kb's, and leave off the ' at the beginning */
    ),  
    scans_in_target_month AS (  
       SELECT *  
       FROM dim_scan  
-      WHERE finished >= '2016-09-26' AND finished < '2016-10-19'    /* This is where you will edit the beginning and ending dates for your scan, or the range of dates you want to pull your data from.  */
+      WHERE finished >= '2018-12-01' AND finished < '2018-12-21'    /* This is where you will edit the beginning and ending dates for your scan, or the range of dates you want to pull your data from.  */
    ),  
    asset_vulnerabilities_in_month AS (  
       SELECT DISTINCT asset_id, vulnerability_id  
